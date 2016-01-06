@@ -1,0 +1,3 @@
+'''
+    Self hosted Cozy helpers
+'''

@@ -1,4 +1,6 @@
-#!/usr/bin/env python
+'''
+    CouchDB management
+'''
 import os
 import pwd
 import random
@@ -9,7 +11,10 @@ LOGIN_FILENAME = "/etc/cozy/couchdb.login"
 BASE_URL = 'http://127.0.0.1:5984'
 
 
-class HTTP_Error(Exception):
+class HTTPError(Exception):
+    '''
+        HTTP error exception
+    '''
     def __init__(self, value):
         self.value = value
 
@@ -28,20 +33,20 @@ def id_generator(size=32,
     return ''.join(random.choice(chars) for x in range(size))
 
 
-def create_token_file(user=id_generator(), password=id_generator()):
+def create_token_file(username=id_generator(), password=id_generator()):
     '''
         Store the admins password for further retrieve
     '''
 
     cozy_ds_uid = int(pwd.getpwnam('cozy-data-system').pw_uid)
     if not os.path.isfile(LOGIN_FILENAME):
-        with open(LOGIN_FILENAME, 'w+') as f:
-            f.write("{0}\n{1}".format(user, password))
+        with open(LOGIN_FILENAME, 'w+') as token_file:
+            token_file.write("{0}\n{1}".format(username, password))
 
-    f = os.open(LOGIN_FILENAME, os.O_RDONLY)
-    os.fchmod(f, 0400)
-    os.fchown(f, cozy_ds_uid, 0)
-    os.close(f)
+    token_file = os.open(LOGIN_FILENAME, os.O_RDONLY)
+    os.fchmod(token_file, 0400)
+    os.fchown(token_file, cozy_ds_uid, 0)
+    os.close(token_file)
 
 
 def get_admin():
@@ -49,8 +54,8 @@ def get_admin():
         Return the actual admin from token file
     '''
     if os.path.isfile(LOGIN_FILENAME):
-        with open(LOGIN_FILENAME, 'r') as f:
-            old_login, old_password = f.read().splitlines()[:2]
+        with open(LOGIN_FILENAME, 'r') as token_file:
+            old_login, old_password = token_file.read().splitlines()[:2]
             return old_login, old_password
     else:
         return None, None
@@ -60,11 +65,11 @@ def curl_couchdb(url, method='GET', base_url=BASE_URL, data=None):
     '''
         Launch a curl on CouchDB instance
     '''
-    (COZY_USER, COZY_PASS) = get_admin()
-    if COZY_USER is None:
+    (username, password) = get_admin()
+    if username is None:
         auth = None
     else:
-        auth = (COZY_USER, COZY_PASS)
+        auth = (username, password)
 
     if method == 'PUT':
         req = requests.put('{}{}'.format(base_url, url), auth=auth, data=data)
@@ -74,7 +79,7 @@ def curl_couchdb(url, method='GET', base_url=BASE_URL, data=None):
         req = requests.get('{}{}'.format(base_url, url), auth=auth)
 
     if req.status_code != 200:
-        raise HTTP_Error('{}: {}'.format(req.status_code, req.text))
+        raise HTTPError('{}: {}'.format(req.status_code, req.text))
     return req
 
 
@@ -91,22 +96,22 @@ def get_couchdb_admins():
     return user_list
 
 
-def create_couchdb_admin(user, password):
+def create_couchdb_admin(username, password):
     '''
         Create a CouchDB user
     '''
-    req = curl_couchdb('/_config/admins/{}'.format(user),
+    req = curl_couchdb('/_config/admins/{}'.format(username),
                        method='PUT',
                        data='"{}"'.format(password))
 
     return req.json()
 
 
-def delete_couchdb_admin(user):
+def delete_couchdb_admin(username):
     '''
         Delete a CouchDB user
     '''
-    req = curl_couchdb('/_config/admins/{}'.format(user),
+    req = curl_couchdb('/_config/admins/{}'.format(username),
                        method='DELETE')
 
     return req.json()
@@ -117,20 +122,20 @@ def delete_all_couchdb_admins():
         Delete all CouchDB users
     '''
     # Get current cozy token
-    (COZY_USER, COZY_PASS) = get_admin()
+    username = get_admin()[0]
     # Get CouchDB admin list
     admins = get_couchdb_admins()
 
     # Delete all admin user excluding current
     for admin in admins:
-        if admin == COZY_USER:
+        if admin == username:
             print "Delete {} later...".format(admin)
         else:
             print "Delete {}".format(admin)
             delete_couchdb_admin(admin)
 
     # Delete current CouchDB admin
-    admin = COZY_USER
+    admin = username
     print "Delete {}".format(admin)
     delete_couchdb_admin(admin)
 
@@ -139,13 +144,13 @@ def delete_token():
     '''
         Delete current token, file & CouchDB admin user
     '''
-    (COZY_USER, COZY_PASS) = get_admin()
+    username = get_admin()[0]
     admins = get_couchdb_admins()
 
     # Delete current admin if exist
-    if COZY_USER in admins:
-        print 'I delete {} CouchDB user'.format(COZY_USER)
-        delete_couchdb_admin(COZY_USER)
+    if username in admins:
+        print 'I delete {} CouchDB user'.format(username)
+        delete_couchdb_admin(username)
 
     # Delete token file if exist
     if os.path.isfile(LOGIN_FILENAME):
@@ -157,10 +162,10 @@ def create_token():
     '''
         Create token file & create user
     '''
-    user = id_generator()
+    username = id_generator()
     password = id_generator()
-    print create_couchdb_admin(user, password)
-    create_token_file(user, password)
+    print create_couchdb_admin(username, password)
+    create_token_file(username, password)
 
 
 def reset_token():
@@ -178,8 +183,8 @@ def ping_couchdb():
     try:
         curl_couchdb('/cozy/')
         ping = True
-    except HTTP_Error, e:
-        print e
+    except HTTPError, error:
+        print error
         ping = False
     return ping
 

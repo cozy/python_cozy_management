@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 '''
 A cozy-monitor parser
 '''
