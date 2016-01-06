@@ -2,38 +2,9 @@
 
 Helper to manage self hosting cozy
 
-## Install / Hack
-
-Get build dependencies
-
-    sudo apt-get install python python-pip python-dev python-requests
-
-Setup your virtual environment:
-
-    sudo pip install virtualenv
-    virtualenv virtualenv
-    . virtualenv/bin/activate
-
-Install dependencies:
-
-    pip install -r requirements/common.txt
-
 ## Contribution
 
 * Pick and solve an [issue](https://github.com/cozy/python_cozy_management/issues)
-
-## Tests
-
-[![Build
-Status](https://travis-ci.org/cozy/python_cozy_management.png?branch=master)](https://travis-ci.org/cozy/python_cozy_management)
-
-Install development dependencies
-
-    pip install -r requirements/dev.txt
-
-Run tests
-
-    lettuce tests
 
 ## License
 
