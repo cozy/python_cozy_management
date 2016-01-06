@@ -1,0 +1,4 @@
+include LICENSE
+include *.md
+recursive-include cozy_management *.txt
+recursive-include cozy_management *.feature

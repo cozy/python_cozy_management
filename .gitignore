@@ -1,0 +1,10 @@
+*.swp
+*.pyc
+venv
+virtualenv
+Cozy_management.egg-info/
+build/
+dist/
+cozy_management.egg-info/
+debian/cozy_management
+.ropeproject
