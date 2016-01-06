@@ -104,8 +104,6 @@ def create_couchdb_admin(username, password):
                        method='PUT',
                        data='"{}"'.format(password))
 
-    return req.json()
-
 
 def delete_couchdb_admin(username):
     '''
@@ -164,8 +162,10 @@ def create_token():
     '''
     username = id_generator()
     password = id_generator()
-    print create_couchdb_admin(username, password)
+    create_couchdb_admin(username, password)
     create_token_file(username, password)
+
+    return 'Token {} created'.format(username)
 
 
 def reset_token():

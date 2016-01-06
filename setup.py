@@ -5,14 +5,15 @@
 
 import os
 import sys
+import setuptools
 
 CURRENT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 sys.path.remove(CURRENT_DIRECTORY)
 sys.path.insert(0, os.path.join(CURRENT_DIRECTORY, 'cozy_management'))
 
-from setuptools import setup, find_packages
+# from setuptools import setup, find_packages
 
-setup(
+setuptools.setup(
     name='cozy_management',
     version='0.0.2',
     description='Module to help self hosted cozy management',
@@ -22,8 +23,13 @@ setup(
     url='https://github.com/cozy/python_cozy_management',
     keywords=['cozy'],
     license='LGPL',
-    packages=find_packages(),
-    install_requires=['requests'],
+    packages=setuptools.find_packages(),
+    entry_points={
+        'console_scripts': [
+            'cozy_management = cozy_management.cli:main'
+        ]
+    },
+    install_requires=['docopt', 'requests'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
