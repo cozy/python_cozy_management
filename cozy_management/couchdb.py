@@ -100,9 +100,9 @@ def create_couchdb_admin(username, password):
     '''
         Create a CouchDB user
     '''
-    req = curl_couchdb('/_config/admins/{}'.format(username),
-                       method='PUT',
-                       data='"{}"'.format(password))
+    curl_couchdb('/_config/admins/{}'.format(username),
+                 method='PUT',
+                 data='"{}"'.format(password))
 
 
 def delete_couchdb_admin(username):
