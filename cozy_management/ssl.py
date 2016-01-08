@@ -3,6 +3,7 @@
 '''
 
 import os
+import subprocess
 import OpenSSL.crypto
 
 CERTIFICATES_PATH = '/etc/cozy/certs'
@@ -10,12 +11,18 @@ OLD_CERTIFICATE_PATH = '/etc/cozy/server.crt'
 OLD_PRIVATE_KEY_PATH = '/etc/cozy/server.key'
 CURRENT_CERTIFICATE_PATH = OLD_CERTIFICATE_PATH
 CURRENT_PRIVATE_KEY_PATH = OLD_PRIVATE_KEY_PATH
+DH_PATH = '/etc/cozy/dh.pem'
+DEFAULT_KEY_SIZE = 4096
+DEFAULT_DIGEST = 'sha256'
+DEFAULT_DHPARAM_SIZE = 4096
 
 FILETYPE_PEM = OpenSSL.crypto.FILETYPE_PEM
 TYPE_RSA = OpenSSL.crypto.TYPE_RSA
 
 
-def generate_key(common_name, size=4096, digest='sha256'):
+def generate_certificate(common_name,
+                         size=DEFAULT_KEY_SIZE,
+                         digest=DEFAULT_DIGEST):
     '''
         Generate private key and certificate for https
     '''
@@ -73,7 +80,7 @@ def get_crt_common_name(certificate_path=OLD_CERTIFICATE_PATH):
     return crt.get_subject().commonName
 
 
-def move_old_path_to_new_standard():
+def normalize_cert_dir():
     '''
         Put old cerfificate form to new one
     '''
@@ -130,3 +137,19 @@ def make_links(current_cn):
         print 'Create symlink {} -> {}'.format(CURRENT_PRIVATE_KEY_PATH,
                                                target)
         os.symlink(target, CURRENT_PRIVATE_KEY_PATH)
+
+
+def regenerate_dhparam(size):
+    if os.path.isfile(DH_PATH):
+        print 'Backup {} in {}'.format(DH_PATH, '{}.bak'.format(DH_PATH))
+        os.rename(DH_PATH, '{}.bak'.format(DH_PATH))
+    cmd = 'openssl dhparam -out {} -outform PEM -2 {}'.format(DH_PATH, size)
+    cmd += ' && chmod 400 {}'.format(DH_PATH)
+    cmd += ' && chown root:root {}'.format(DH_PATH)
+    print 'Launch commands: {}'.format(cmd)
+    p = subprocess.Popen(cmd,
+                         shell=True,
+                         stdout=subprocess.PIPE,
+                         close_fds=True)
+    p.wait()
+    print '\n'.join(p.stdout.readlines())
