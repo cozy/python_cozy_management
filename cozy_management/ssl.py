@@ -6,6 +6,8 @@ import os
 import subprocess
 import OpenSSL.crypto
 
+from . import helpers
+
 CERTIFICATES_PATH = '/etc/cozy/certs'
 OLD_CERTIFICATE_PATH = '/etc/cozy/server.crt'
 OLD_PRIVATE_KEY_PATH = '/etc/cozy/server.key'
@@ -52,6 +54,7 @@ def generate_certificate(common_name,
                 OpenSSL.crypto.dump_privatekey(FILETYPE_PEM,
                                                private_key).decode('utf-8')
             )
+        helpers.file_rights(private_key_path, mode=0400, uid=0, gid=0)
     else:
         print 'Already exist: {}'.format(private_key_path)
 
@@ -63,6 +66,7 @@ def generate_certificate(common_name,
                 OpenSSL.crypto.dump_certificate(FILETYPE_PEM,
                                                 certificate).decode('utf-8')
             )
+        helpers.file_rights(certificate_path, mode=0444, uid=0, gid=0)
     else:
         print 'Already exist: {}'.format(certificate_path)
 

@@ -2,10 +2,11 @@
     CouchDB management
 '''
 import os
-import pwd
 import random
 import string
 import requests
+
+from . import helpers
 
 LOGIN_FILENAME = "/etc/cozy/couchdb.login"
 BASE_URL = 'http://127.0.0.1:5984'
@@ -38,15 +39,12 @@ def create_token_file(username=id_generator(), password=id_generator()):
         Store the admins password for further retrieve
     '''
 
-    cozy_ds_uid = int(pwd.getpwnam('cozy-data-system').pw_uid)
+    cozy_ds_uid = helpers.get_uid('cozy-data-system')
     if not os.path.isfile(LOGIN_FILENAME):
         with open(LOGIN_FILENAME, 'w+') as token_file:
             token_file.write("{0}\n{1}".format(username, password))
 
-    token_file = os.open(LOGIN_FILENAME, os.O_RDONLY)
-    os.fchmod(token_file, 0400)
-    os.fchown(token_file, cozy_ds_uid, 0)
-    os.close(token_file)
+    helpers.file_rights(LOGIN_FILENAME, mode=0400, uid=cozy_ds_uid, gid=0)
 
 
 def get_admin():
