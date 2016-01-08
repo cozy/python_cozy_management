@@ -6,5 +6,7 @@ Cozy_management.egg-info/
 build/
 dist/
 cozy_management.egg-info/
-debian/cozy_management
+debian/python-cozy-management
+debian/python-cozy-management.debhelper.log
+debian/python-cozy-management.substvars
 .ropeproject
