@@ -1,7 +1,7 @@
 Source: python-cozy-management
 Section: cozy
 Priority: optional
-Maintainer: Nicolas Ledez <nicolas@cozycloud.cc>
+Maintainer: Cozy Debian Packaging <debian-packaging@cozycloud.cc>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.5
 Homepage: https://github.com/cozy/python_cozy_management
@@ -9,6 +9,6 @@ Vcs-Git: https://github.com/cozy/python_cozy_management.git
 
 Package: python-cozy-management
 Architecture: all
-Depends: ${misc:Depends}, python3-requests
+Depends: ${misc:Depends}, python-requests, python-docopt
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>

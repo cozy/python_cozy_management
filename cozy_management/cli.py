@@ -14,6 +14,7 @@ Usage:
     cozy_management make_links <common_name>
     cozy_management generate_certificate <common_name> [--size <size>] [--digest <digest>]
     cozy_management regenerate_dhparam [--size <size>]
+    cozy_management compare_version <current> <operator> <reference>
 
 Options:
     cozy_management -h | --help
@@ -23,6 +24,7 @@ Options:
 import docopt
 from cozy_management import couchdb
 from cozy_management import ssl
+from cozy_management import compare_version
 
 
 def main():
@@ -107,6 +109,12 @@ def main():
 
         print 'Regenerate dhparam with {} size'.format(size)
         ssl.regenerate_dhparam(size)
+
+    if arguments['compare_version']:
+        current = arguments['<current>']
+        operator = arguments['<operator>']
+        reference = arguments['<reference>']
+        compare_version.compare(current, operator, reference)
 
 
 if __name__ == '__main__':
