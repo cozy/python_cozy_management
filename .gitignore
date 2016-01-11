@@ -5,6 +5,7 @@ virtualenv
 Cozy_management.egg-info/
 build/
 dist/
+debian/files
 cozy_management.egg-info/
 debian/python-cozy-management
 debian/python-cozy-management.debhelper.log

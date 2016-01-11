@@ -1,3 +1,15 @@
+python-cozy-management (0.0.8) unstable; urgency=medium
+
+  * Add bash_completion for cozy_management
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Mon, 11 Jan 2016 15:16:13 +0000
+
+python-cozy-management (0.0.7) unstable; urgency=medium
+
+  * Add python-openssl
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Sat, 09 Jan 2016 08:54:50 +0000
+
 python-cozy-management (0.0.6) unstable; urgency=low
 
   * Initial Release.
