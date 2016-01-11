@@ -8,5 +8,3 @@ include /usr/share/dpkg/default.mk
 
 %:
 	dh $@ 
-	mkdir -p $(CURDIR)/debian/python-cozy-management/etc/bash_completion.d
-	cp $(CURDIR)/bash_completion.cozy_management $(CURDIR)/debian/python-cozy-management/etc/bash_completion.d/cozy_management
