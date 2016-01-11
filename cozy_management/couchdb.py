@@ -103,6 +103,27 @@ def create_couchdb_admin(username, password):
                  data='"{}"'.format(password))
 
 
+def unregister_cozy():
+    '''
+        Unregister a cozy
+    '''
+    req = curl_couchdb('/cozy/_design/user/_view/all')
+    users = req.json()['rows']
+
+    if len(users) > 0:
+        user = users[0]['value']
+        user_id = user['_id']
+        user_rev = user['_rev']
+
+        print 'Delete cozy user: {}'.format(user_id)
+        req = curl_couchdb('/cozy/{}?rev={}'.format(user_id, user_rev),
+                method='DELETE')
+
+        return req.json()
+    else:
+        print 'Cozy not registered'
+        return None
+
 def delete_couchdb_admin(username):
     '''
         Delete a CouchDB user

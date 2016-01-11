@@ -15,6 +15,7 @@ Usage:
     cozy_management generate_certificate <common_name> [--size <size>] [--digest <digest>]
     cozy_management regenerate_dhparam [--size <size>]
     cozy_management compare_version <current> <operator> <reference>
+    cozy_management unregister_cozy
 
 Options:
     cozy_management -h | --help
@@ -115,6 +116,9 @@ def main():
         operator = arguments['<operator>']
         reference = arguments['<reference>']
         compare_version.compare(current, operator, reference)
+
+    if arguments['unregister_cozy']:
+        couchdb.unregister_cozy()
 
 
 if __name__ == '__main__':
