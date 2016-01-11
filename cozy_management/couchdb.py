@@ -103,6 +103,18 @@ def create_couchdb_admin(username, password):
                  data='"{}"'.format(password))
 
 
+def is_cozy_registered():
+    '''
+        Check if a Cozy is registered
+    '''
+    req = curl_couchdb('/cozy/_design/user/_view/all')
+    users = req.json()['rows']
+
+    if len(users) > 0:
+        return True
+    else:
+        return False
+
 def unregister_cozy():
     '''
         Unregister a cozy

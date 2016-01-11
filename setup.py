@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.join(CURRENT_DIRECTORY, 'cozy_management'))
 
 setuptools.setup(
     name='cozy_management',
-    version='0.0.10',
+    version='0.0.11',
     description='Module to help self hosted cozy management',
     long_description=open('README.md').read(),
     author='Cozy Cloud',
@@ -30,7 +30,7 @@ setuptools.setup(
         ]
     },
     data_files=[
-        ('/etc/bash_completion.d', ['extras/bash_completion.cozy_management'])
+        ('/etc/bash_completion.d', ['extras/bash_completion/cozy_management'])
     ],
     install_requires=['docopt', 'requests'],
     classifiers=[
