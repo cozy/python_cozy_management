@@ -32,7 +32,7 @@ setuptools.setup(
     data_files=[
         ('/etc/bash_completion.d', ['extras/bash_completion/cozy_management'])
     ],
-    install_requires=['docopt', 'requests'],
+    install_requires=['docopt', 'psutil', 'requests'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

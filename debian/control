@@ -9,6 +9,6 @@ Vcs-Git: https://github.com/cozy/python_cozy_management.git
 
 Package: python-cozy-management
 Architecture: all
-Depends: ${misc:Depends}, python-requests, python-docopt, python-openssl
+Depends: ${misc:Depends}, python-requests, python-docopt, python-openssl, python-psutil
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>
