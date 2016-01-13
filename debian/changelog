@@ -1,3 +1,9 @@
+python-cozy-management (0.0.13) unstable; urgency=medium
+
+  * Add fix_oom_score to bash completion & fix dependencies
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Wed, 13 Jan 2016 18:28:35 +0000
+
 python-cozy-management (0.0.12) unstable; urgency=medium
 
   * Add fix_oom_score
