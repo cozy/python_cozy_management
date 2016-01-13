@@ -17,6 +17,7 @@ Usage:
     cozy_management compare_version <current> <operator> <reference>
     cozy_management is_cozy_registered
     cozy_management unregister_cozy
+    cozy_management fix_oom_score
 
 Options:
     cozy_management -h | --help
@@ -24,8 +25,9 @@ Options:
 '''
 
 import docopt
-from cozy_management import couchdb
 from cozy_management import ssl
+from cozy_management import couchdb
+from cozy_management import process
 from cozy_management import compare_version
 
 
@@ -123,6 +125,9 @@ def main():
 
     if arguments['unregister_cozy']:
         couchdb.unregister_cozy()
+
+    if arguments['fix_oom_score']:
+        process.fix_oom_score()
 
 
 if __name__ == '__main__':
