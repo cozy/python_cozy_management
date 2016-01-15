@@ -8,14 +8,16 @@ import sys
 import setuptools
 
 CURRENT_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-sys.path.remove(CURRENT_DIRECTORY)
+if CURRENT_DIRECTORY in sys.path:
+    sys.path.remove(CURRENT_DIRECTORY)
 sys.path.insert(0, os.path.join(CURRENT_DIRECTORY, 'cozy_management'))
 
 # from setuptools import setup, find_packages
 
 setuptools.setup(
+    include_package_data=True,
     name='cozy_management',
-    version='0.0.13',
+    version='0.0.14',
     description='Module to help self hosted cozy management',
     long_description=open('README.md').read(),
     author='Cozy Cloud',
