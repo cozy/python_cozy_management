@@ -1,3 +1,10 @@
+python-cozy-management (0.0.15) unstable; urgency=medium
+
+  * Add show_diag, show_reporting, get_oom_scores
+  * Rename fix_oom_score into fix_oom_scores
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Mon, 25 Jan 2016 23:16:16 +0000
+
 python-cozy-management (0.0.14) unstable; urgency=medium
 
   * Fix manifest for bash_completion
