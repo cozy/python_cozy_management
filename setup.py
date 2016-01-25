@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.join(CURRENT_DIRECTORY, 'cozy_management'))
 setuptools.setup(
     include_package_data=True,
     name='cozy_management',
-    version='0.0.14',
+    version='0.0.15',
     description='Module to help self hosted cozy management',
     long_description=open('README.md').read(),
     author='Cozy Cloud',
