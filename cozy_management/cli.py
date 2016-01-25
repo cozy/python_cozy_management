@@ -1,6 +1,7 @@
 '''Cozy management command line
 
 Usage:
+    cozy_management show_diag
     cozy_management ping_couchdb
     cozy_management get_admin
     cozy_management get_couchdb_admins
@@ -27,6 +28,7 @@ Options:
 import docopt
 from cozy_management import ssl
 from cozy_management import couchdb
+from cozy_management import diag
 from cozy_management import process
 from cozy_management import compare_version
 
@@ -37,9 +39,12 @@ def main():
     '''
     arguments = docopt.docopt(__doc__, version='Naval Fate 2.0')
 
+    if arguments['show_diag']:
+        diag.show()
+
     if arguments['ping_couchdb']:
         try:
-            if couchdb.ping_couchdb():
+            if couchdb.ping():
                 print 'OK'
             else:
                 print 'KO'

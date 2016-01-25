@@ -4,6 +4,7 @@
 
 import os
 import pwd
+import subprocess
 
 
 def get_uid(username):
@@ -22,3 +23,23 @@ def file_rights(filepath, mode=None, uid=None, gid=None):
             gid = 0
         os.fchown(file_handle, uid, gid)
     os.close(file_handle)
+
+
+def cmd_exec(cmd):
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
+    p.wait()
+
+    return {
+            'error': p.returncode,
+            'stdout': p.stdout.readlines(),
+            'stderr': p.stderr.readlines()
+            }
+
+
+def array_2_str(array):
+    return ''.join(array)
+
+
+def get_ip_addresses():
+    result = cmd_exec('hostname -I')
+    return result['stdout'][0].split(' ')[:-1]

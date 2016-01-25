@@ -207,14 +207,14 @@ def reset_token():
     create_token()
 
 
-def ping_couchdb():
+def ping():
     '''
         Ping CozyDB with existing credentials
     '''
     try:
         curl_couchdb('/cozy/')
         ping = True
-    except HTTPError, error:
+    except requests.exceptions.ConnectionError, error:
         print error
         ping = False
     return ping
@@ -233,3 +233,19 @@ def get_cozy_param(param):
             return rows[0].get('value', {}).get(param, None)
     except:
         return None
+
+
+def get_database_dir():
+    import ConfigParser
+    result = {}
+    file_list = helpers.cmd_exec('find /usr/local/etc/couchdb /etc/couchdb -type f -name "*.ini"')
+    file_list = list(s.rstrip('\n') for s in file_list['stdout'])
+    for filename in file_list:
+        config = ConfigParser.ConfigParser()
+        config.readfp(open(filename))
+        try:
+            path = config.get('couchdb', 'database_dir')
+            result[filename] = path
+        except:
+            pass
+    return result
