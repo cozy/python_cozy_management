@@ -18,7 +18,8 @@ Usage:
     cozy_management compare_version <current> <operator> <reference>
     cozy_management is_cozy_registered
     cozy_management unregister_cozy
-    cozy_management fix_oom_score
+    cozy_management fix_oom_scores
+    cozy_management get_oom_scores
 
 Options:
     cozy_management -h | --help
@@ -133,6 +134,9 @@ def main():
 
     if arguments['fix_oom_score']:
         process.fix_oom_score()
+
+    if arguments['get_oom_scores']:
+        process.get_oom_scores()
 
 
 if __name__ == '__main__':
