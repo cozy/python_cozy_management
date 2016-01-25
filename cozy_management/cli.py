@@ -2,6 +2,7 @@
 
 Usage:
     cozy_management show_diag
+    cozy_management show_reporting
     cozy_management ping_couchdb
     cozy_management get_admin
     cozy_management get_couchdb_admins
@@ -41,6 +42,10 @@ def main():
     arguments = docopt.docopt(__doc__, version='Naval Fate 2.0')
 
     if arguments['show_diag']:
+        diag.show()
+
+    if arguments['show_reporting']:
+        diag.reporting()
         diag.show()
 
     if arguments['ping_couchdb']:
@@ -132,8 +137,8 @@ def main():
     if arguments['unregister_cozy']:
         couchdb.unregister_cozy()
 
-    if arguments['fix_oom_score']:
-        process.fix_oom_score()
+    if arguments['fix_oom_scores']:
+        process.fix_oom_scores()
 
     if arguments['get_oom_scores']:
         process.get_oom_scores()
