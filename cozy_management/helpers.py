@@ -27,12 +27,12 @@ def file_rights(filepath, mode=None, uid=None, gid=None):
 
 def cmd_exec(cmd):
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
-    p.wait()
+    stdout, stderr = p.communicate()
 
     return {
             'error': p.returncode,
-            'stdout': p.stdout.readlines(),
-            'stderr': p.stderr.readlines()
+            'stdout': stdout,
+            'stderr': stderr
             }
 
 
@@ -42,4 +42,4 @@ def array_2_str(array):
 
 def get_ip_addresses():
     result = cmd_exec('hostname -I')
-    return result['stdout'][0].split(' ')[:-1]
+    return result['stdout'].split(' ')[:-1]

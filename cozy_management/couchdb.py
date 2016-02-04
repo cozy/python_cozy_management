@@ -239,7 +239,7 @@ def get_database_dir():
     import ConfigParser
     result = {}
     file_list = helpers.cmd_exec('find /usr/local/etc/couchdb /etc/couchdb -type f -name "*.ini"')
-    file_list = list(s.rstrip('\n') for s in file_list['stdout'])
+    file_list = file_list['stdout'].rstrip('\n').split('\n')
     for filename in file_list:
         config = ConfigParser.ConfigParser()
         config.readfp(open(filename))

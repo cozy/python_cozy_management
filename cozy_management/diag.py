@@ -75,8 +75,8 @@ def exec_and_print(command_line, text=None):
         text = command_line
     result = helpers.cmd_exec(command_line)
     print '===== {}'.format(text)
-    print _clean_result(helpers.array_2_str(result['stderr']))
-    print _clean_result(helpers.array_2_str(result['stdout']))
+    print _clean_result(result['stderr'])
+    print _clean_result(result['stdout'])
 
 
 def _show_files_content(file_pattern, text=None):
@@ -101,8 +101,7 @@ def _show_couchdb_database_dir_content():
     for filename in database_dir:
         db_directory = database_dir[filename]
         print '=== {}'.format(db_directory)
-        print helpers.array_2_str(
-            helpers.cmd_exec('ls -l {}'.format(db_directory))['stdout'])
+        print helpers.cmd_exec('ls -l {}'.format(db_directory))['stdout']
 
 
 def _show_couchdb_result(url='/'):
@@ -115,7 +114,10 @@ def _show_couchdb_result(url='/'):
 
 
 def _curl(url):
-    requests.packages.urllib3.disable_warnings()
+    try:
+        requests.packages.urllib3.disable_warnings()
+    except AttributeError:
+        pass
     try:
         req = requests.get('{}'.format(url), verify=False)
     except requests.exceptions.ConnectionError:

@@ -28,6 +28,34 @@ def generate_certificate(common_name,
     '''
         Generate private key and certificate for https
     '''
+
+    private_key_path = '{}/{}.key'.format(CERTIFICATES_PATH, common_name)
+    certificate_path = '{}/{}.crt'.format(CERTIFICATES_PATH, common_name)
+    if not os.path.isfile(certificate_path):
+        print 'Create {}'.format(certificate_path)
+	cmd = 'openssl req -x509 -nodes -newkey rsa:{size} -keyout {private_key_path} -out {certificate_path} -days 3650 -subj "/CN={common_name}"'.format(size=size, private_key_path=private_key_path, certificate_path=certificate_path, common_name=common_name)
+	p = subprocess.Popen(cmd,
+			shell=True,
+			stdout=subprocess.PIPE,
+			close_fds=True)
+	stdout, stderr = p.communicate()
+	print stdout
+	print stderr
+        helpers.file_rights(private_key_path, mode=0400, uid=0, gid=0)
+        helpers.file_rights(certificate_path, mode=0444, uid=0, gid=0)
+    else:
+        print 'Already exist: {}'.format(certificate_path)
+
+    clean_links()
+    make_links(common_name)
+
+
+def generate_certificate_pure_python(common_name,
+		size=DEFAULT_KEY_SIZE,
+		digest=DEFAULT_DIGEST):
+    '''
+        Generate private key and certificate for https
+    '''
     private_key = OpenSSL.crypto.PKey()
     private_key.generate_key(TYPE_RSA, size)
 
