@@ -9,6 +9,7 @@ import subprocess
 
 # Regexp to remove color in output
 ANSI_ESCAPE = re.compile(r'\x1b[^m]*m')
+SYSTEM_APPS = ['controller', 'couch', 'mta']
 
 
 def launch_command(command, parameter=''):
@@ -32,7 +33,7 @@ def launch_command(command, parameter=''):
     return result
 
 
-def status(app_name=None):
+def status(app_name=None, only_cozy=False):
     '''Get apps status
 
     :param app_name: If pass app name return this app status
@@ -49,7 +50,8 @@ def status(app_name=None):
     for app_status in apps_status:
         if app_status:
             app_status = ANSI_ESCAPE.sub('', app_status).split(': ')
-            apps[app_status[0]] = app_status[1]
+            if only_cozy and app_status[0] not in SYSTEM_APPS:
+                apps[app_status[0]] = app_status[1]
 
     # Return app status if get as param or return all apps status
     if app_name:
