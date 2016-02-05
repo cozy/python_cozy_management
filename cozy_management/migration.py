@@ -2,6 +2,8 @@
     Some migrations helpers
 '''
 
+import time
+
 from . import ssl
 from . import helpers
 from . import monitor
@@ -67,6 +69,9 @@ def migrate_2_node4():
     helpers.cmd_exec('update-all', show_output=True)
     ssl.normalize_cert_dir()
     helpers.cmd_exec('apt-get update', show_output=True)
+    helpers.cmd_exec(
+        'echo "cozy cozy/nodejs_apt_list text " | debconf-set-selections',
+        show_output=True)
     helpers.cmd_exec('apt-get install -y cozy-apt-node-list', show_output=True)
     helpers.cmd_exec('apt-get update', show_output=True)
     helpers.cmd_exec('apt-get install -y cozy', show_output=True)
@@ -74,4 +79,5 @@ def migrate_2_node4():
                      show_output=True)
     rebuild_all_apps()
     helpers.cmd_exec('supervisorctl restart cozy-controller', show_output=True)
+    helpers.wait_cozy_stack(1)
     restart_stopped_apps()

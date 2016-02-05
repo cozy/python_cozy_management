@@ -115,6 +115,7 @@ def is_cozy_registered():
     else:
         return False
 
+
 def unregister_cozy():
     '''
         Unregister a cozy
@@ -129,12 +130,13 @@ def unregister_cozy():
 
         print 'Delete cozy user: {}'.format(user_id)
         req = curl_couchdb('/cozy/{}?rev={}'.format(user_id, user_rev),
-                method='DELETE')
+                           method='DELETE')
 
         return req.json()
     else:
         print 'Cozy not registered'
         return None
+
 
 def delete_couchdb_admin(username):
     '''

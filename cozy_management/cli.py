@@ -23,6 +23,8 @@ Usage:
     cozy_management get_oom_scores
     cozy_management rebuild_all_apps
     cozy_management migrate_2_node4
+    cozy_management wait_couchdb
+    cozy_management wait_cozy_stack
 
 Options:
     cozy_management -h | --help
@@ -36,6 +38,7 @@ from cozy_management import diag
 from cozy_management import process
 from cozy_management import compare_version
 from cozy_management import migration
+from cozy_management import helpers
 
 
 def main():
@@ -151,6 +154,12 @@ def main():
 
     if arguments['migrate_2_node4']:
         migration.migrate_2_node4()
+
+    if arguments['wait_couchdb']:
+        helpers.wait_couchdb()
+
+    if arguments['wait_cozy_stack']:
+        helpers.wait_cozy_stack()
 
 
 if __name__ == '__main__':
