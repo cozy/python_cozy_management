@@ -12,7 +12,7 @@ _cozy_management()
 	COMPREPLY=()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
-	opts="--help -h clean_links compare_version create_token delete_token fix_oom_scores generate_certificate get_admin get_couchdb_admins get_cozy_param get_crt_common_name get_oom_scores is_cozy_registered make_links normalize_cert_dir ping_couchdb regenerate_dhparam reset_token show_diag show_reporting unregister_cozy"
+	opts="--help -h clean_links compare_version create_token delete_token fix_oom_scores generate_certificate get_admin get_couchdb_admins get_cozy_param get_crt_common_name get_oom_scores is_cozy_registered make_links normalize_cert_dir ping_couchdb regenerate_dhparam reset_token show_diag show_reporting unregister_cozy rebuild_all_apps migrate_2_node4"
 
 	COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 	return 0

@@ -21,6 +21,8 @@ Usage:
     cozy_management unregister_cozy
     cozy_management fix_oom_scores
     cozy_management get_oom_scores
+    cozy_management rebuild_all_apps
+    cozy_management migrate_2_node4
 
 Options:
     cozy_management -h | --help
@@ -33,6 +35,7 @@ from cozy_management import couchdb
 from cozy_management import diag
 from cozy_management import process
 from cozy_management import compare_version
+from cozy_management import migration
 
 
 def main():
@@ -142,6 +145,12 @@ def main():
 
     if arguments['get_oom_scores']:
         process.get_oom_scores()
+
+    if arguments['rebuild_all_apps']:
+        migration.rebuild_all_apps()
+
+    if arguments['migrate_2_node4']:
+        migration.migrate_2_node4()
 
 
 if __name__ == '__main__':
