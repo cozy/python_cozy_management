@@ -1,3 +1,14 @@
+python-cozy-management (0.0.16) unstable; urgency=medium
+
+  * Add wait_couchdb & wait_cozystack
+  * Add Cozy update before upgrade & restart stopped apps
+  * Add migrate_2_node4 & better cmd_exec with live output
+  * Add migration helper
+  * Fix system call with 255fd2a837c706e50c03276b023ac5d319215f13 PR. Thanks
+    @nicofrand
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Fri, 05 Feb 2016 14:35:48 +0000
+
 python-cozy-management (0.0.15) unstable; urgency=medium
 
   * Add show_diag, show_reporting, get_oom_scores
