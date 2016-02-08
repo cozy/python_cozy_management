@@ -21,6 +21,7 @@ Usage:
     cozy_management unregister_cozy
     cozy_management fix_oom_scores
     cozy_management get_oom_scores
+    cozy_management rebuild_app <app>
     cozy_management rebuild_all_apps
     cozy_management migrate_2_node4
     cozy_management wait_couchdb
@@ -148,6 +149,9 @@ def main():
 
     if arguments['get_oom_scores']:
         process.get_oom_scores()
+
+    if arguments['rebuild_app']:
+        migration.rebuild_app(arguments['<app>'])
 
     if arguments['rebuild_all_apps']:
         migration.rebuild_all_apps()
