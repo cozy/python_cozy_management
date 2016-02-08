@@ -26,13 +26,16 @@ Usage:
     cozy_management migrate_2_node4
     cozy_management wait_couchdb
     cozy_management wait_cozy_stack
+    cozy_management emulate_smtp [--bind <ip>] [--port <port>]
 
 Options:
     cozy_management -h | --help
 
 '''
 
+import smtpd
 import docopt
+import asyncore
 from cozy_management import ssl
 from cozy_management import couchdb
 from cozy_management import diag
@@ -164,6 +167,20 @@ def main():
 
     if arguments['wait_cozy_stack']:
         helpers.wait_cozy_stack()
+
+    if arguments['emulate_smtp']:
+        from pprint import pprint
+        pprint(arguments)
+        ip = '127.0.0.1'
+        port = 25
+        if '--bind' in arguments:
+            ip = arguments['<ip>']
+        if '--port' in arguments:
+            port = arguments['<port>']
+
+        print 'Emulate SMTP server on {}:{}'.format(ip, port)
+        smtpd.DebuggingServer(tuple([ip, int(port)]), None)
+        asyncore.loop()
 
 
 if __name__ == '__main__':
