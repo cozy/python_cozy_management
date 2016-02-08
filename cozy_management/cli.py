@@ -169,14 +169,15 @@ def main():
         helpers.wait_cozy_stack()
 
     if arguments['emulate_smtp']:
-        from pprint import pprint
-        pprint(arguments)
         ip = '127.0.0.1'
-        port = 25
-        if '--bind' in arguments:
+        port = '25'
+        if arguments['--bind']:
             ip = arguments['<ip>']
-        if '--port' in arguments:
-            port = arguments['<port>']
+        if arguments['--port']:
+            if arguments['<port>']:  # a bug in docops?
+                port = arguments['<port>']
+            else:
+                port = arguments['<ip>']
 
         print 'Emulate SMTP server on {}:{}'.format(ip, port)
         smtpd.DebuggingServer(tuple([ip, int(port)]), None)
