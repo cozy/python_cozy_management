@@ -2,8 +2,6 @@
     Some migrations helpers
 '''
 
-import time
-
 from . import ssl
 from . import helpers
 from . import monitor
@@ -18,6 +16,7 @@ def rebuild_app(app_name, quiet=False, force=True, without_exec=False):
     user = 'cozy-{app_name}'.format(app_name=app_name)
     home = '{prefix}/{app_name}'.format(prefix=PREFIX, app_name=app_name)
     command_line = 'cd {home}'.format(home=home)
+    command_line += ' && git pull'
     if force:
         command_line += ' && rm -rf node_modules'
     command_line += ' && chown -R {user}:{user} .'.format(user=user)
@@ -65,8 +64,15 @@ def migrate_2_node4():
     '''
         Migrate existing cozy to node4
     '''
+    helpers.cmd_exec('npm install -g cozy-monitor cozy-controller',
+                     show_output=True)
+    rebuild_all_apps()
     helpers.cmd_exec('update-cozy-stack', show_output=True)
     helpers.cmd_exec('update-all', show_output=True)
+    helpers.cmd_exec('rm /etc/supervisor/conf.d/cozy-indexer.conf',
+                     show_output=True)
+    helpers.cmd_exec('supervisorctl reload', show_output=True)
+    helpers.wait_cozy_stack(1)
     ssl.normalize_cert_dir()
     helpers.cmd_exec('apt-get update', show_output=True)
     helpers.cmd_exec(
@@ -74,6 +80,7 @@ def migrate_2_node4():
         show_output=True)
     helpers.cmd_exec('apt-get install -y cozy-apt-node-list', show_output=True)
     helpers.cmd_exec('apt-get update', show_output=True)
+    helpers.cmd_exec('apt-get install -y nodejs', show_output=True)
     helpers.cmd_exec('apt-get install -y cozy', show_output=True)
     helpers.cmd_exec('npm install -g cozy-monitor cozy-controller',
                      show_output=True)
@@ -81,3 +88,4 @@ def migrate_2_node4():
     helpers.cmd_exec('supervisorctl restart cozy-controller', show_output=True)
     helpers.wait_cozy_stack(1)
     restart_stopped_apps()
+    helpers.cmd_exec('apt-get install -y cozy', show_output=True)

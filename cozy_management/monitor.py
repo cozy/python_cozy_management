@@ -50,8 +50,9 @@ def status(app_name=None, only_cozy=False):
     for app_status in apps_status:
         if app_status:
             app_status = ANSI_ESCAPE.sub('', app_status).split(': ')
-            if only_cozy and app_status[0] not in SYSTEM_APPS:
-                apps[app_status[0]] = app_status[1]
+            if len(app_status) == 2:
+                if only_cozy and app_status[0] not in SYSTEM_APPS:
+                    apps[app_status[0]] = app_status[1]
 
     # Return app status if get as param or return all apps status
     if app_name:

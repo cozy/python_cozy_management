@@ -174,7 +174,7 @@ def main():
         if arguments['--bind']:
             ip = arguments['<ip>']
         if arguments['--port']:
-            if arguments['<port>']:  # a bug in docops?
+            if arguments['<port>']:  # a bug in docopt?
                 port = arguments['<port>']
             else:
                 port = arguments['<ip>']
