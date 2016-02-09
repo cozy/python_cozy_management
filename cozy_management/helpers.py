@@ -64,27 +64,27 @@ def wait_http(url, ok_message, interval=10):
                 time.sleep(interval)
 
 
-def wait_couchdb(interval=1):
+def wait_couchdb(interval=10):
     wait_http('http://127.0.0.1:5984/', 'CouchDB OK', interval)
 
 
-def wait_cozy_controller(interval=1):
+def wait_cozy_controller(interval=10):
     wait_http('http://127.0.0.1:9002/', 'Cozy controller OK', interval)
 
 
-def wait_cozy_datasytem(interval=1):
+def wait_cozy_datasytem(interval=10):
     wait_http('http://127.0.0.1:9101/', 'Cozy data sytem OK', interval)
 
 
-def wait_cozy_home(interval=1):
+def wait_cozy_home(interval=10):
     wait_http('http://127.0.0.1:9103/', 'Cozy home OK', interval)
 
 
-def wait_cozy_proxy(interval=1):
+def wait_cozy_proxy(interval=10):
     wait_http('http://127.0.0.1:9104/', 'Cozy proxy OK', interval)
 
 
-def wait_cozy_stack(interval=1):
+def wait_cozy_stack(interval=10):
     wait_couchdb(interval)
     wait_cozy_controller(interval)
     wait_cozy_datasytem(interval)

@@ -9,7 +9,8 @@ from . import monitor
 PREFIX = '/usr/local/cozy/apps'
 
 
-def rebuild_app(app_name, quiet=False, force=True, without_exec=False):
+def rebuild_app(app_name, quiet=False, force=True, without_exec=False,
+                restart=False):
     '''
         Rebuild cozy apps with deletion of npm directory & new npm build
     '''
@@ -18,12 +19,19 @@ def rebuild_app(app_name, quiet=False, force=True, without_exec=False):
     command_line = 'cd {home}'.format(home=home)
     command_line += ' && git pull'
     if force:
-        command_line += ' && rm -rf node_modules'
+        command_line += ' && ([ -d node_modules ] && rm -rf node_modules || true)'
+        command_line += ' && ([ -d .node-gyp ] && rm -rf .node-gyp || true)'
+        command_line += ' && ([ -d .npm ] && rm -rf .npm || true)'
     command_line += ' && chown -R {user}:{user} .'.format(user=user)
     command_line += ' && sudo -u {user} env HOME={home} npm install'.format(
         user=user,
         home=home
     )
+    if restart:
+        command_line += ' && cozy-monitor update {app_name}'.format(
+            app_name=app_name)
+        command_line += ' && cozy-monitor restart {app_name}'.format(
+            app_name=app_name)
 
     if not quiet:
         print 'Execute:'
@@ -36,13 +44,13 @@ def rebuild_app(app_name, quiet=False, force=True, without_exec=False):
         print result['error']
 
 
-def rebuild_all_apps():
+def rebuild_all_apps(force=True, restart=False):
     '''
         Get all cozy apps & rebuild npm repository
     '''
     cozy_apps = monitor.status(only_cozy=True)
     for app in cozy_apps.keys():
-        rebuild_app(app, force=True)
+        rebuild_app(app, force=force, restart=restart)
 
 
 def restart_stopped_apps():
@@ -72,7 +80,7 @@ def migrate_2_node4():
     helpers.cmd_exec('rm /etc/supervisor/conf.d/cozy-indexer.conf',
                      show_output=True)
     helpers.cmd_exec('supervisorctl reload', show_output=True)
-    helpers.wait_cozy_stack(1)
+    helpers.wait_cozy_stack()
     ssl.normalize_cert_dir()
     helpers.cmd_exec('apt-get update', show_output=True)
     helpers.cmd_exec(
@@ -86,6 +94,6 @@ def migrate_2_node4():
                      show_output=True)
     rebuild_all_apps()
     helpers.cmd_exec('supervisorctl restart cozy-controller', show_output=True)
-    helpers.wait_cozy_stack(1)
+    helpers.wait_cozy_stack()
     restart_stopped_apps()
     helpers.cmd_exec('apt-get install -y cozy', show_output=True)
