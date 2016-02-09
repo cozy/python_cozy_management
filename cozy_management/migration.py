@@ -92,8 +92,11 @@ def migrate_2_node4():
     helpers.cmd_exec('apt-get install -y cozy', show_output=True)
     helpers.cmd_exec('npm install -g cozy-monitor cozy-controller',
                      show_output=True)
-    rebuild_all_apps()
+    rebuild_app('data-system')
+    rebuild_app('home')
+    rebuild_app('proxy')
     helpers.cmd_exec('supervisorctl restart cozy-controller', show_output=True)
     helpers.wait_cozy_stack()
+    rebuild_all_apps(restart=True)
     restart_stopped_apps()
     helpers.cmd_exec('apt-get install -y cozy', show_output=True)
