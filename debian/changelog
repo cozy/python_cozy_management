@@ -1,3 +1,9 @@
+python-cozy-management (0.0.18.1) unstable; urgency=medium
+
+  * Add missing dependency python-pkg-resources
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Wed, 10 Feb 2016 23:15:15 +0000
+
 python-cozy-management (0.0.18) unstable; urgency=medium
 
   * Add installation
