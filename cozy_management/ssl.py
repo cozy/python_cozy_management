@@ -106,10 +106,13 @@ def get_crt_common_name(certificate_path=OLD_CERTIFICATE_PATH):
     '''
         Get CN from certificate
     '''
-    certificate_file = open(certificate_path)
-    crt = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
-                                          certificate_file.read())
-    return crt.get_subject().commonName
+    try:
+        certificate_file = open(certificate_path)
+        crt = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
+                                            certificate_file.read())
+        return crt.get_subject().commonName
+    except IOError:
+        return None
 
 
 def normalize_cert_dir():
@@ -138,7 +141,8 @@ def normalize_cert_dir():
     else:
         print 'Nothing to do for {}'.format(OLD_PRIVATE_KEY_PATH)
 
-    make_links(current_cn)
+    if current_cn:
+        make_links(current_cn)
 
 
 def clean_links():

@@ -1,3 +1,10 @@
+python-cozy-management (0.0.18) unstable; urgency=medium
+
+  * Add installation
+  * Fix normalize_cert_dir if certificates doesn't exists
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Wed, 10 Feb 2016 22:49:10 +0000
+
 python-cozy-management (0.0.17) unstable; urgency=medium
 
   * Add rebuild_app to command line with parameters

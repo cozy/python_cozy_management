@@ -31,6 +31,7 @@ def cmd_exec(cmd, show_output=False):
     if show_output:
         p = subprocess.Popen(cmd, shell=True, close_fds=True)
         stdout, stderr = p.communicate()
+        return p.returncode
     else:
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, close_fds=True)

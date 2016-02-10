@@ -24,6 +24,8 @@ Usage:
     cozy_management rebuild_app <app> [--not-force] [--restart]
     cozy_management rebuild_all_apps [--not-force] [--restart]
     cozy_management migrate_2_node4
+    cozy_management install_requirements
+    cozy_management install_cozy
     cozy_management wait_couchdb
     cozy_management wait_cozy_stack
     cozy_management emulate_smtp [--bind <ip>] [--port <port>]
@@ -177,6 +179,12 @@ def main():
 
     if arguments['migrate_2_node4']:
         migration.migrate_2_node4()
+
+    if arguments['install_requirements']:
+        migration.install_requirements()
+
+    if arguments['install_cozy']:
+        migration.install_cozy()
 
     if arguments['wait_couchdb']:
         helpers.wait_couchdb()

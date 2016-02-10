@@ -1,6 +1,7 @@
 '''
     Some migrations helpers
 '''
+import sys
 
 from . import ssl
 from . import helpers
@@ -100,3 +101,28 @@ def migrate_2_node4():
     rebuild_all_apps(restart=True)
     restart_stopped_apps()
     helpers.cmd_exec('apt-get install -y cozy', show_output=True)
+
+
+def install_requirements():
+    '''
+        Install cozy requirements
+    '''
+    helpers.cmd_exec(
+        'echo "cozy cozy/nodejs_apt_list text " | debconf-set-selections',
+        show_output=True)
+    helpers.cmd_exec('apt-get install -y cozy-apt-node-list', show_output=True)
+    helpers.cmd_exec('apt-get update', show_output=True)
+    command_line = 'apt-get install -y nodejs'
+    command_line += ' && apt-get install -y cozy-depends'
+    return_code = helpers.cmd_exec(command_line, show_output=True)
+    if return_code != 0:
+        sys.exit(return_code)
+
+
+def install_cozy():
+    '''
+        Install a cozy
+    '''
+    install_requirements()
+    command_line = 'apt-get install -y cozy'
+    helpers.cmd_exec(command_line, show_output=True)
