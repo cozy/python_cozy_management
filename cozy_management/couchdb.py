@@ -76,7 +76,7 @@ def curl_couchdb(url, method='GET', base_url=BASE_URL, data=None):
     else:
         req = requests.get('{}{}'.format(base_url, url), auth=auth)
 
-    if req.status_code != 200:
+    if req.status_code not in [200, 201]:
         raise HTTPError('{}: {}'.format(req.status_code, req.text))
     return req
 
@@ -101,6 +101,14 @@ def create_couchdb_admin(username, password):
     curl_couchdb('/_config/admins/{}'.format(username),
                  method='PUT',
                  data='"{}"'.format(password))
+
+
+def create_cozy_db(db_name='cozy'):
+    '''
+        Create a CouchDB cozy DB
+    '''
+    curl_couchdb('/{}'.format(db_name),
+                 method='PUT')
 
 
 def is_cozy_registered():

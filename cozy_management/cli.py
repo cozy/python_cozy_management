@@ -8,6 +8,7 @@ Usage:
     cozy_management get_couchdb_admins
     cozy_management delete_token
     cozy_management create_token
+    cozy_management create_cozy_db [--name <name>]
     cozy_management reset_token
     cozy_management get_cozy_param <name>
     cozy_management normalize_cert_dir
@@ -88,6 +89,14 @@ def main():
 
     if arguments['create_token']:
         print couchdb.create_token()
+
+    if arguments['create_cozy_db']:
+        if arguments['--name']:
+            db_name = arguments.get('<name>', 'cozy')
+        else:
+            db_name = 'cozy'
+        couchdb.create_cozy_db(db_name)
+        print '{} DB is ready'.format(db_name)
 
     if arguments['reset_token']:
         couchdb.reset_token()
