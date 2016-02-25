@@ -33,7 +33,7 @@ def launch_command(command, parameter=''):
     return result
 
 
-def status(app_name=None, only_cozy=False):
+def status(app_name=None, only_cozy=False, as_boolean=False):
     '''Get apps status
 
     :param app_name: If pass app name return this app status
@@ -51,12 +51,20 @@ def status(app_name=None, only_cozy=False):
         if app_status:
             app_status = ANSI_ESCAPE.sub('', app_status).split(': ')
             if len(app_status) == 2:
+                current_status = app_status[1]
+                if as_boolean:
+                    if app_status[1] == 'up':
+                        current_status = True
+                    else:
+                        current_status = False
                 if only_cozy and app_status[0] not in SYSTEM_APPS:
-                    apps[app_status[0]] = app_status[1]
+                    apps[app_status[0]] = current_status
+                else:
+                    apps[app_status[0]] = current_status
 
     # Return app status if get as param or return all apps status
     if app_name:
-        return apps[app_name]
+        return apps.get(app_name, None)
     else:
         return apps
 
