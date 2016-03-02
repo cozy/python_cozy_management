@@ -29,6 +29,8 @@ Usage:
     cozy_management wait_couchdb
     cozy_management wait_cozy_stack
     cozy_management emulate_smtp [--bind <ip>] [--port <port>]
+    cozy_management backup
+    cozy_management restore <backup_filename>
 
 Options:
     cozy_management -h | --help
@@ -39,6 +41,7 @@ import smtpd
 import docopt
 import asyncore
 from cozy_management import ssl
+from cozy_management import backup
 from cozy_management import couchdb
 from cozy_management import diag
 from cozy_management import process
@@ -206,6 +209,12 @@ def main():
         print 'Emulate SMTP server on {}:{}'.format(ip, port)
         smtpd.DebuggingServer(tuple([ip, int(port)]), None)
         asyncore.loop()
+
+    if arguments['backup']:
+        backup.backup()
+
+    if arguments['restore']:
+        backup.restore(arguments['<backup_filename>'])
 
 
 if __name__ == '__main__':
