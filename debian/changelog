@@ -1,3 +1,16 @@
+python-cozy-management (0.0.19) unstable; urgency=medium
+
+  * Add backup & restore
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Wed, 02 Mar 2016 13:16:54 +0000
+
+python-cozy-management (0.0.18.2) unstable; urgency=medium
+
+  * Add create_cozy_db
+  * Fix status to add a boolean outpout
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Thu, 25 Feb 2016 15:51:08 +0000
+
 python-cozy-management (0.0.18.1) unstable; urgency=medium
 
   * Add missing dependency python-pkg-resources
