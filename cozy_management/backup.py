@@ -25,6 +25,7 @@ def backup():
     cmd += ' /etc/cozy /usr/local/var/cozy /var/lib/couchdb/cozy.couch'
     cmd = cmd.format(BACKUPS_PATH, timestamp)
     helpers.cmd_exec(cmd, show_output=True)
+    print 'Backup file: {}/cozy-{}.tgz'.format(BACKUPS_PATH, timestamp)
 
 
 def restore(backup_file):
@@ -36,5 +37,14 @@ def restore(backup_file):
         print 'Missing backup file: {}'.format(backup_file)
     else:
         print 'Restore Cozy:'
-        cmd = 'tar xvzf {} -C /'.format(backup_file)
+        cmd = 'supervisorctl stop cozy-controller ; sleep 10'
+        cmd += ' ; service couchdb stop ; service nginx stop'
+        cmd += ' ; rm -rf /var/lib/couchdb/.cozy_design'
+        cmd += ' /var/lib/couchdb/_replicator.couch'
+        cmd += ' ; tar xvzf {} -C /'
+        cmd += ' ; service couchdb start ; service nginx start'
+        cmd = cmd.format(backup_file)
+        helpers.cmd_exec(cmd, show_output=True)
+        helpers.wait_couchdb(10)
+        cmd = 'supervisorctl start cozy-controller'
         helpers.cmd_exec(cmd, show_output=True)
