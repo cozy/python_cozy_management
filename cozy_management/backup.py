@@ -27,7 +27,7 @@ def backup():
     cmd += ' --exclude stack.token'
     cmd += ' --exclude couchdb.login'
     cmd += ' --exclude self-hosting.json'
-    cmd += ' /etc/cozy /usr/local/var/cozy '+ COUCHDB_PATH +'/cozy.couch'
+    cmd += ' /etc/cozy /usr/local/var/cozy {couchdb_path}/cozy.couch'.format(couchdb_path=COUCHDB_PATH)
     cmd = cmd.format(BACKUPS_PATH, timestamp)
     helpers.cmd_exec(cmd, show_output=True)
     print 'Backup file: {}/cozy-{}.tgz'.format(BACKUPS_PATH, timestamp)
