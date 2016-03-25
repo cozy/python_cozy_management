@@ -44,8 +44,8 @@ def restore(backup_file):
         print 'Restore Cozy:'
         cmd = 'supervisorctl stop cozy-controller ; sleep 10'
         cmd += ' ; service couchdb stop ; service nginx stop'
-        cmd += ' ; rm -rf '+ COUCHDB_PATH +'/.cozy_design'
-        cmd += ' '+ COUCHDB_PATH +'/_replicator.couch'
+        cmd += ' ; rm -rf {couchdb_path}/.cozy_design'.format(couchdb_path=COUCHDB_PATH)
+        cmd += ' {couchdb_path}/_replicator.couch'.format(couchdb_path=COUCHDB_PATH)
         cmd += ' ; tar xvzf {} -C /'
         cmd += ' ; service couchdb start ; service nginx start'
         cmd = cmd.format(backup_file)
