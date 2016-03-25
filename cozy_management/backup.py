@@ -6,8 +6,13 @@ import os
 import time
 
 from . import helpers
+import couchdb
 
 BACKUPS_PATH = '/var/lib/cozy/backups'
+
+database_dir = couchdb.get_database_dir()
+#get the first value that should be the couchdb path
+COUCHDB_PATH = database_dir[list(database_dir)[0]]
 
 
 def backup():
@@ -22,7 +27,7 @@ def backup():
     cmd += ' --exclude stack.token'
     cmd += ' --exclude couchdb.login'
     cmd += ' --exclude self-hosting.json'
-    cmd += ' /etc/cozy /usr/local/var/cozy /var/lib/couchdb/cozy.couch'
+    cmd += ' /etc/cozy /usr/local/var/cozy '+ COUCHDB_PATH +'/cozy.couch'
     cmd = cmd.format(BACKUPS_PATH, timestamp)
     helpers.cmd_exec(cmd, show_output=True)
     print 'Backup file: {}/cozy-{}.tgz'.format(BACKUPS_PATH, timestamp)
@@ -39,8 +44,8 @@ def restore(backup_file):
         print 'Restore Cozy:'
         cmd = 'supervisorctl stop cozy-controller ; sleep 10'
         cmd += ' ; service couchdb stop ; service nginx stop'
-        cmd += ' ; rm -rf /var/lib/couchdb/.cozy_design'
-        cmd += ' /var/lib/couchdb/_replicator.couch'
+        cmd += ' ; rm -rf '+ COUCHDB_PATH +'/.cozy_design'
+        cmd += ' '+ COUCHDB_PATH +'/_replicator.couch'
         cmd += ' ; tar xvzf {} -C /'
         cmd += ' ; service couchdb start ; service nginx start'
         cmd = cmd.format(backup_file)
