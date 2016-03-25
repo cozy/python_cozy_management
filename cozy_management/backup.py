@@ -6,7 +6,7 @@ import os
 import time
 
 from . import helpers
-import couchdb
+from . import couchdb
 
 BACKUPS_PATH = '/var/lib/cozy/backups'
 
