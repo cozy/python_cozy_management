@@ -137,10 +137,12 @@ def _die(message):
 
 def check_lsb_codename():
     codename = helpers.cmd_exec('lsb_release -cs')['stdout'].rstrip('\n')
-    if codename not in ['sjessie', 'trusty']:
+    if codename not in ['jessie', 'trusty']:
         print '[KO] you need to install Cozy on Debian jessie or Ubuntu trusty'
         print '!!!! If you continue, we can\'t support your installation.'
-    return -1
+        return -1
+    else:
+        return 0
 
 
 def reporting():
