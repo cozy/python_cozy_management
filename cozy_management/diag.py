@@ -150,6 +150,7 @@ def reporting():
     exec_and_print('which node nodejs', 'nodejs path')
     exec_and_print('node -v ; nodejs -v', 'node & nodejs version')
     exec_and_print('npm -g ls -depth 0', 'npm packages')
+    exec_and_print('python -V')
     exec_and_print('pip list')
     exec_and_print('supervisorctl status')
     _show_files_content('/etc/supervisor/conf.d/cozy-*.conf')
@@ -172,6 +173,8 @@ def reporting():
         'echo "=== $f" ; tail -20 $f; echo; '
         'done')
     exec_and_print(find_and_tail_files_cmd, 'All logs')
+    exec_and_print('cozy-monitor status')
+    exec_and_print('cozy-monitor versions')
 
 
 def show():
