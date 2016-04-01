@@ -1,0 +1,3 @@
+[submodule "cozy_management/acme_tiny"]
+	path = cozy_management/acme_tiny
+	url = https://github.com/diafygi/acme-tiny.git
