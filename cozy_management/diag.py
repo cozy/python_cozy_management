@@ -155,7 +155,7 @@ def reporting():
         _show_couchdb_result()
         _show_couchdb_result('/cozy')
     exec_and_print('ls -l /etc/cozy')
-    exec_and_print('find /usr/local/cozy* -type d -maxdepth 2 -ls',
+    exec_and_print('find /usr/local/cozy* -maxdepth 2 -type d -ls',
                    'find /usr/local/cozy*')
     find_and_tail_files_cmd = (
         'for f in /var/log/supervisor/cozy-*stdout*.log '
