@@ -29,6 +29,7 @@ Usage:
     cozy_management install_cozy
     cozy_management wait_couchdb
     cozy_management wait_cozy_stack
+    cozy_management check_lsb_codename
     cozy_management emulate_smtp [--bind <ip>] [--port <port>]
     cozy_management backup
     cozy_management restore <backup_filename>
@@ -38,6 +39,7 @@ Options:
 
 '''
 
+import sys
 import smtpd
 import docopt
 import asyncore
@@ -203,6 +205,9 @@ def main():
 
     if arguments['wait_cozy_stack']:
         helpers.wait_cozy_stack()
+
+    if arguments['check_lsb_codename']:
+        sys.exit(diag.check_lsb_codename())
 
     if arguments['emulate_smtp']:
         ip = '127.0.0.1'

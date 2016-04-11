@@ -2,6 +2,14 @@
 
 Helper to manage self hosting cozy
 
+## Install
+
+Make sure those packages are installed on your environment :
+> python-requests python-docopt python-openssl	python-psutil python-pkg-resources
+
+Then, install Python Cozy Management :
+`pip install cozy_management`
+
 ## Usage
 
 * **show_diag**: display a quick diagnostic of the server;

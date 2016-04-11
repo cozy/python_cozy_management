@@ -135,12 +135,24 @@ def _die(message):
     sys.exit(0)
 
 
+def check_lsb_codename():
+    codename = helpers.cmd_exec('lsb_release -cs')['stdout'].rstrip('\n')
+    if codename not in ['jessie', 'trusty']:
+        print '[KO] you need to install Cozy on Debian jessie or Ubuntu trusty'
+        print '!!!! If you continue, we can\'t support your installation.'
+        return -1
+    else:
+        return 0
+
+
 def reporting():
     exec_and_print('lsb_release -a')
+    check_lsb_codename()
     exec_and_print('uname -a')
     exec_and_print('which node nodejs', 'nodejs path')
     exec_and_print('node -v ; nodejs -v', 'node & nodejs version')
     exec_and_print('npm -g ls -depth 0', 'npm packages')
+    exec_and_print('python -V')
     exec_and_print('pip list')
     exec_and_print('supervisorctl status')
     _show_files_content('/etc/supervisor/conf.d/cozy-*.conf')
@@ -163,9 +175,12 @@ def reporting():
         'echo "=== $f" ; tail -20 $f; echo; '
         'done')
     exec_and_print(find_and_tail_files_cmd, 'All logs')
+    exec_and_print('cozy-monitor status')
+    exec_and_print('cozy-monitor versions')
 
 
 def show():
+    check_lsb_codename()
     try:
         couchdb_ping = couchdb.ping()
     except couchdb.HTTPError:
