@@ -9,6 +9,8 @@ import OpenSSL.crypto
 from . import helpers
 
 CERTIFICATES_PATH = '/etc/cozy/certs'
+ACME_PRIVATE_PATH = '/etc/cozy/acme'
+ACME_PRIVATE_KEY = '{}/account.key'.format(ACME_PRIVATE_PATH)
 OLD_CERTIFICATE_PATH = '/etc/cozy/server.crt'
 OLD_PRIVATE_KEY_PATH = '/etc/cozy/server.key'
 CURRENT_CERTIFICATE_PATH = OLD_CERTIFICATE_PATH
@@ -33,14 +35,12 @@ def generate_certificate(common_name,
     certificate_path = '{}/{}.crt'.format(CERTIFICATES_PATH, common_name)
     if not os.path.isfile(certificate_path):
         print 'Create {}'.format(certificate_path)
-	cmd = 'openssl req -x509 -nodes -newkey rsa:{size} -keyout {private_key_path} -out {certificate_path} -days 3650 -subj "/CN={common_name}"'.format(size=size, private_key_path=private_key_path, certificate_path=certificate_path, common_name=common_name)
-	p = subprocess.Popen(cmd,
-			shell=True,
-			stdout=subprocess.PIPE,
-			close_fds=True)
-	stdout, stderr = p.communicate()
-	print stdout
-	print stderr
+        cmd = 'openssl req -x509 -nodes -newkey rsa:{size} -keyout {private_key_path} -out {certificate_path} -days 3650 -subj "/CN={common_name}"'.format(size=size, private_key_path=private_key_path, certificate_path=certificate_path, common_name=common_name)
+        p = subprocess.Popen(cmd,
+                             shell=True,
+                             stdout=subprocess.PIPE,
+                             close_fds=True)
+        stdout, stderr = p.communicate()
         helpers.file_rights(private_key_path, mode=0400, uid=0, gid=0)
         helpers.file_rights(certificate_path, mode=0444, uid=0, gid=0)
     else:
@@ -50,9 +50,28 @@ def generate_certificate(common_name,
     make_links(common_name)
 
 
+def acme_sign_certificate(common_name):
+    '''
+        Sign certificate with acme_tiny for let's encrypt
+    '''
+    private_key_path = '{}/{}.key'.format(CERTIFICATES_PATH, common_name)
+    certificate_path = '{}/{}.crt'.format(CERTIFICATES_PATH, common_name)
+    certificate_request_path = '{}/{}.csr'.format(CERTIFICATES_PATH,
+                                                  common_name)
+    acme_private_key = ACME_PRIVATE_KEY
+
+    cmd = 'acme_tiny.py --account-key {acme_private_key}'
+    cmd += ' --csr {certificate_request_path}'
+    cmd += ' --acme-dir /var/www/cozy-letsencrypt'
+    cmd += ' > /etc/cozy/certs/{common_name}-signed.crt'
+    cmd = cmd.format(acme_private_key=acme_private_key,
+                     common_name=common_name,
+                     certificate_request_path=certificate_request_path)
+
+
 def generate_certificate_pure_python(common_name,
-		size=DEFAULT_KEY_SIZE,
-		digest=DEFAULT_DIGEST):
+                                     size=DEFAULT_KEY_SIZE,
+                                     digest=DEFAULT_DIGEST):
     '''
         Generate private key and certificate for https
     '''
@@ -124,6 +143,10 @@ def normalize_cert_dir():
     if not os.path.isdir(CERTIFICATES_PATH):
         print 'Need to create {}'.format(CERTIFICATES_PATH)
         os.mkdir(CERTIFICATES_PATH, 0755)
+
+    if not os.path.isdir(ACME_PRIVATE_PATH):
+        print 'Need to create {}'.format(ACME_PRIVATE_PATH)
+        os.mkdir(ACME_PRIVATE_PATH, 0700)
 
     if os.path.isfile(OLD_CERTIFICATE_PATH) and \
             not os.path.islink(OLD_CERTIFICATE_PATH):

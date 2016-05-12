@@ -34,6 +34,7 @@ setuptools.setup(
     data_files=[
         ('/etc/bash_completion.d', ['extras/bash_completion/cozy_management'])
     ],
+    scripts=['extras/acme_tiny/acme_tiny.py'],
     install_requires=['docopt', 'psutil', 'requests'],
     classifiers=[
         'Development Status :: 3 - Alpha',
