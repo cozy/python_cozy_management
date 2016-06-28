@@ -75,7 +75,6 @@ def migrate_2_node4():
     '''
     helpers.cmd_exec('npm install -g cozy-monitor cozy-controller',
                      show_output=True)
-    rebuild_all_apps()
     helpers.cmd_exec('update-cozy-stack', show_output=True)
     helpers.cmd_exec('update-all', show_output=True)
     helpers.cmd_exec('rm /etc/supervisor/conf.d/cozy-indexer.conf',
@@ -89,6 +88,9 @@ def migrate_2_node4():
         show_output=True)
     helpers.cmd_exec('apt-get install -y cozy-apt-node-list', show_output=True)
     helpers.cmd_exec('apt-get update', show_output=True)
+    helpers.cmd_exec('apt-get remove -y nodejs-legacy', show_output=True)
+    helpers.cmd_exec('apt-get remove -y nodejs-dev', show_output=True)
+    helpers.cmd_exec('apt-get remove -y npm', show_output=True)
     helpers.cmd_exec('apt-get install -y nodejs', show_output=True)
     helpers.cmd_exec('apt-get install -y cozy', show_output=True)
     helpers.cmd_exec('npm install -g cozy-monitor cozy-controller',
