@@ -2,6 +2,8 @@
 
 Helper to manage self hosting cozy
 
+** ⚠ This tool has only been tested on the platforms we support (Debian / Ubuntu / Raspbian). Some of the commands will not work on other distributions. It is mostly a wrapper around shell commands, so if you use another distribution, you can probably read the code and adapt the commands to your distribution **
+
 ## Install
 
 Make sure those packages are installed on your environment :
