@@ -34,6 +34,9 @@ Usage:
     cozy_management emulate_smtp [--bind <ip>] [--port <port>]
     cozy_management backup
     cozy_management restore <backup_filename>
+    cozy_management install_weboob
+    cozy_management update_weboob
+    cozy_management update_weboob_modules
 
 Options:
     cozy_management -h | --help
@@ -52,6 +55,7 @@ from cozy_management import process
 from cozy_management import compare_version
 from cozy_management import migration
 from cozy_management import helpers
+from cozy_management import weboob
 
 
 def main():
@@ -236,6 +240,12 @@ def main():
 
     if arguments['restore']:
         backup.restore(arguments['<backup_filename>'])
+
+    if arguments['install_weboob'] or arguments['update_weboob']:
+        weboob.install()
+
+    if arguments['update_weboob_modules']:
+        weboob.update()
 
 
 if __name__ == '__main__':
