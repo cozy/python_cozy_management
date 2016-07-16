@@ -24,7 +24,7 @@ def rebuild_app(app_name, quiet=False, force=True, without_exec=False,
         command_line += ' && ([ -d .node-gyp ] && rm -rf .node-gyp || true)'
         command_line += ' && ([ -d .npm ] && rm -rf .npm || true)'
     command_line += ' && chown -R {user}:{user} .'.format(user=user)
-    command_line += ' && sudo -u {user} env HOME={home} npm install'.format(
+    command_line += ' && sudo -u {user} env HOME={home} npm install --production'.format(
         user=user,
         home=home
     )
