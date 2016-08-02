@@ -35,14 +35,17 @@ Then, install Python Cozy Management :
 * **get_oom_scores**: get the Out Of Memory score for each application;
 * **rebuild_app <app>**: reinstall every npm dependencies of an application;
 * **rebuild_all_apps**: reinstall every npm dependencies of all applications (useful when upgrading Node version);
-* **migrate_2_node4**: 
-* **install_requirements**: 
+* **migrate_2_node4**:
+* **install_requirements**:
 * **install_cozy**: install the Cozy server;
 * **wait_couchdb**: wait until couchdb has started;
 * **wait_cozy_stack**: wait until full Cozy stack has started;
 * **emulate_smtp [--bind <ip>] [--port <port>]** starts a fake SMTP server on port 25 for debugging purpose;
 * **backup**: create a timestamped backup of Cozy configuration and data into `/var/lib/cozy/backups`;
 * **restore <backup_filename>**: restore a backup;
+* **install_weboob**: install weboob from devel repository
+* **update_weboob**: update weboob from devel repository
+* **update_weboob_modules**: update weboob modules
 
 ## Contribution
 
@@ -59,9 +62,9 @@ Python Cozy management is developed by Cozy Cloud and distributed under the AGPL
 [Cozy](http://cozy.io) is a platform that brings all your web services in the
 same private space.  With it, your web apps and your devices can share data
 easily, providing you with a new experience. You can install Cozy on your own
-hardware where no one profiles you. 
+hardware where no one profiles you.
 
-## Community 
+## Community
 
 You can reach the Cozy Community by:
 
