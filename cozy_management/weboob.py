@@ -3,12 +3,13 @@
     Weboob management
 '''
 
+import os
+import shutil
+
 from helpers import cmd_exec
-from shutil import rmtree
-from sys import path
-from os import path
 
 WEBOOB_REPO = 'git://git.symlink.me/pub/weboob/devel.git'
+
 
 def get_weboob_version():
     result = cmd_exec('weboob-cli --version')
@@ -16,6 +17,7 @@ def get_weboob_version():
         return result['stdout'].rstrip()
 
     return None
+
 
 def update():
     print 'Updating weboob configuration'
@@ -26,6 +28,7 @@ def update():
     else:
         print 'Update succeeded'
 
+
 def install():
     '''
         Install weboob system-wide
@@ -33,7 +36,7 @@ def install():
     tmp_weboob_dir = '/tmp/weboob'
 
     # Check that the directory does not already exists
-    while (path.exists(tmp_weboob_dir)):
+    while (os.path.exists(tmp_weboob_dir)):
         tmp_weboob_dir += '1'
 
     # Clone the repository
@@ -50,7 +53,7 @@ def install():
     result = cmd_exec('cd {} && ./setup.py install'.format(tmp_weboob_dir))
 
     # Remove the weboob directory
-    rmtree(tmp_weboob_dir)
+    shutil.rmtree(tmp_weboob_dir)
 
     if (result['error']):
         print result['stderr']

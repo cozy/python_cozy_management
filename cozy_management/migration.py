@@ -6,6 +6,7 @@ import sys
 from . import ssl
 from . import helpers
 from . import monitor
+from . import weboob
 
 PREFIX = '/usr/local/cozy/apps'
 
@@ -119,6 +120,7 @@ def install_requirements():
     return_code = helpers.cmd_exec(command_line, show_output=True)
     if return_code != 0:
         sys.exit(return_code)
+    weboob.install()
 
 
 def install_cozy():
