@@ -62,8 +62,9 @@ nginx if not.
 
 def _clean_result(string_to_clean):
     string_cleaned = string_to_clean
-    string_cleaned = re.sub(r'{}'.format('|'.join(HOSTNAMES)),
-                            'the-hostname', string_cleaned)
+    if 'cozy' not in HOSTNAMES:
+        string_cleaned = re.sub(r'{}'.format('|'.join(HOSTNAMES)),
+                                'the-hostname', string_cleaned)
     string_cleaned = re.sub(r'{}'.format('|'.join(IP_ADDRESSES)),
                             '127.3.2.1', string_cleaned)
 

@@ -1,3 +1,9 @@
+python-cozy-management (0.0.24) unstable; urgency=medium
+
+  * Fix #21 `cozy` replaced by `the-hostname` in diagnose output
+
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Fri, 09 Sep 2016 11:37:35 +0000
+
 python-cozy-management (0.0.23) unstable; urgency=medium
 
   * Add weboob management capacity
