@@ -26,31 +26,31 @@ This script do this for you:
   * Install weboob
 2. Install Cozy Debian Package
   * Launch an `apt-get install cozy`
-    ** Check nodejs version
-    ** Launch post-configuration for cozy-standalone cozy-nginx cozy-apache2
-    ** cozy-standalone
-      ** Show a warning about self-signed certificate on Android
-      ** Ask for Cozy FQDN
-      ** Ask for certificate type (none, selfsigned, letsencrypt)
-      ** Install npm package (cozy-controller & cozy-monitor)
-      ** Add unix users (cozy, cozy-data-system & cozy-home)
-      ** Create /etc/cozy directory with cozy as owner
-      ** Create /etc/cozy/couchdb.login with Couch admin creation
-      ** Add /etc/supervisor/conf.d/cozy-controller.conf managed by UCF
-      ** (Re)start cozy-controller
-      ** Install stack with `cozy-monitor install-cozy-stack`
-      ** Install & start data-system, home & proxy to avoid errors
-      ** Set the Cozy domain with `commands.coffee setdomain <domain>`
-      ** Set the Cozy background with a curl
-      ** Install default apps (calendar, contacts, photos, emails, files, sync & import-from-google)
-      ** Manage SSL certificate
-    ** cozy-nginx
-      ** Disable default site
-      ** Add /etc/nginx/conf.d/cozy.conf managed by UCF
-      ** Handle let's encrypt if it's activated
-    ** cozy-apache2
-      ** Enable required modules (ssl, proxy_http, proxy_wstunnel & rewrite)
-      ** Add /etc/apache2/sites-available/cozy.conf managed by UCF
+    * Check nodejs version
+    * Launch post-configuration for cozy-standalone cozy-nginx cozy-apache2
+    * cozy-standalone
+      * Show a warning about self-signed certificate on Android
+      * Ask for Cozy FQDN
+      * Ask for certificate type (none, selfsigned, letsencrypt)
+      * Install npm package (cozy-controller & cozy-monitor)
+      * Add unix users (cozy, cozy-data-system & cozy-home)
+      * Create /etc/cozy directory with cozy as owner
+      * Create /etc/cozy/couchdb.login with Couch admin creation
+      * Add /etc/supervisor/conf.d/cozy-controller.conf managed by UCF
+      * (Re)start cozy-controller
+      * Install stack with `cozy-monitor install-cozy-stack`
+      * Install & start data-system, home & proxy to avoid errors
+      * Set the Cozy domain with `commands.coffee setdomain <domain>`
+      * Set the Cozy background with a curl
+      * Install default apps (calendar, contacts, photos, emails, files, sync & import-from-google)
+      * Manage SSL certificate
+    * cozy-nginx
+      * Disable default site
+      * Add /etc/nginx/conf.d/cozy.conf managed by UCF
+      * Handle let's encrypt if it's activated
+    * cozy-apache2
+      * Enable required modules (ssl, proxy_http, proxy_wstunnel & rewrite)
+      * Add /etc/apache2/sites-available/cozy.conf managed by UCF
 
 You can found more information here: https://docs.cozy.io/en/host/install/install-step-by-step.html
 
