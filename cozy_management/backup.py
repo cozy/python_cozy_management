@@ -21,26 +21,35 @@ def _get_couchdb_path():
     return database_dir[list(database_dir)[0]]
 
 
-def backup():
+def backup(backup_filename=None):
     '''
         Backup a Cozy
     '''
-    if not os.path.isdir(BACKUPS_PATH):
-        print 'Need to create {}'.format(BACKUPS_PATH)
-        os.makedirs(BACKUPS_PATH, 0700)
+    timestamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime())
+
+    if not backup_filename:
+        if not os.path.isdir(BACKUPS_PATH):
+            print 'Need to create {}'.format(BACKUPS_PATH)
+            os.makedirs(BACKUPS_PATH, 0700)
+        backup_filename = '{backups_path}/cozy-{timestamp}.tgz'.format(
+            backups_path=BACKUPS_PATH,
+            timestamp=timestamp
+        )
+    elif os.path.exists(backup_filename):
+        print 'Backup file already exists: {}'.format(backup_filename)
+        return
+
     couchdb_path = _get_couchdb_path()
 
-    timestamp = time.strftime("%Y-%m-%d-%H-%M-%S", time.gmtime())
-    cmd = 'tar cvzf {backups_path}/cozy-{timestamp}.tgz'
+    cmd = 'tar cvzf {backup_filename}'
     cmd += ' --exclude stack.token'
     cmd += ' --exclude couchdb.login'
     cmd += ' --exclude self-hosting.json'
     cmd += ' /etc/cozy /usr/local/var/cozy {couchdb_path}/cozy.couch'
-    cmd = cmd.format(backups_path=BACKUPS_PATH,
-                     timestamp=timestamp,
+    cmd = cmd.format(backup_filename=backup_filename,
                      couchdb_path=couchdb_path)
     helpers.cmd_exec(cmd, show_output=True)
-    print 'Backup file: {}/cozy-{}.tgz'.format(BACKUPS_PATH, timestamp)
+    print 'Backup file: {}'.format(backup_filename)
 
 
 def restore(backup_file):

@@ -32,7 +32,7 @@ Usage:
     cozy_management wait_cozy_stack
     cozy_management check_lsb_codename
     cozy_management emulate_smtp [--bind <ip>] [--port <port>]
-    cozy_management backup
+    cozy_management backup [<backup_filename>]
     cozy_management restore <backup_filename>
     cozy_management install_weboob
     cozy_management update_weboob
@@ -236,7 +236,11 @@ def main():
         asyncore.loop()
 
     if arguments['backup']:
-        backup.backup()
+        if arguments['<backup_filename>']:
+            backup_filename = arguments['<backup_filename>']
+        else:
+            backup_filename = None
+        backup.backup(backup_filename)
 
     if arguments['restore']:
         backup.restore(arguments['<backup_filename>'])
