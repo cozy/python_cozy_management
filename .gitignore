@@ -11,3 +11,4 @@ debian/python-cozy-management
 debian/python-cozy-management.debhelper.log
 debian/python-cozy-management.substvars
 .ropeproject
+.pc/
