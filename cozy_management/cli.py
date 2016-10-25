@@ -17,7 +17,6 @@ Usage:
     cozy_management make_links <common_name>
     cozy_management generate_certificate <common_name> [--size <size>] [--digest <digest>]
     cozy_management sign_certificate <common_name>
-    cozy_management regenerate_dhparam [--size <size>]
     cozy_management compare_version <current> <operator> <reference>
     cozy_management is_cozy_registered
     cozy_management unregister_cozy
@@ -152,15 +151,6 @@ def main():
 
         print "Sign certificate for {} with Let's Encrypt".format(common_name)
         ssl.acme_sign_certificate(common_name)
-
-    if arguments['regenerate_dhparam']:
-        if arguments['--size']:
-            size = int(arguments['<size>'])
-        else:
-            size = ssl.DEFAULT_DHPARAM_SIZE
-
-        print 'Regenerate dhparam with {} size'.format(size)
-        ssl.regenerate_dhparam(size)
 
     if arguments['compare_version']:
         current = arguments['<current>']

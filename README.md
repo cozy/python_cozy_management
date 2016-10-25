@@ -70,7 +70,6 @@ You can found more information here: https://docs.cozy.io/en/host/install/instal
 * **generate_certificate <common_name> --size <size> --digest <digest>**: create a certificate;
 * **make_links <common_name>**: create the symbolic links to the certificate files in NGinx configuration;
 * **clean_links**: delete the symbolic links to the certificate files in NGinx configuration;
-* **regenerate_dhparam**: regenerate the DH parameters (a file used when creating a certificate);
 * **is_cozy_registered**: check whether user has already registered its server;
 * **unregister_cozy**: delete user account from database;
 * **fix_oom_scores**: try to prevent applications from the stack to be killed if memory goes low;
