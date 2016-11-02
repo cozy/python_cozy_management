@@ -17,6 +17,7 @@ Usage:
     cozy_management make_links <common_name>
     cozy_management generate_certificate <common_name> [--size <size>] [--digest <digest>]
     cozy_management sign_certificate <common_name>
+    cozy_management renew_certificates
     cozy_management compare_version <current> <operator> <reference>
     cozy_management is_cozy_registered
     cozy_management unregister_cozy
@@ -151,6 +152,9 @@ def main():
 
         print "Sign certificate for {} with Let's Encrypt".format(common_name)
         ssl.acme_sign_certificate(common_name)
+
+    if arguments['renew_certificates']:
+        ssl.acme_renew_certificates()
 
     if arguments['compare_version']:
         current = arguments['<current>']

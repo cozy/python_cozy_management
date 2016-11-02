@@ -1,3 +1,11 @@
+python-cozy-management (0.0.25) UNRELEASED; urgency=medium
+
+  * Remove deprecated DH parameters management
+  * Upgrade ACME-Tiny (new Let’s Encrypt) ToS
+  * Automate Let’s Encrypt renew
+
+ -- aeris <aeris@cozycloud.cc>  Wed, 02 Nov 2016 11:08:52 +0100
+
 python-cozy-management (0.0.24) unstable; urgency=medium
 
   * Fix #21 `cozy` replaced by `the-hostname` in diagnose output

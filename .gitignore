@@ -1,5 +1,6 @@
 *.swp
 *.pyc
+*.iml
 venv
 virtualenv
 Cozy_management.egg-info/
@@ -10,5 +11,6 @@ cozy_management.egg-info/
 debian/python-cozy-management
 debian/python-cozy-management.debhelper.log
 debian/python-cozy-management.substvars
+debian/debhelper-build-stamp
 .ropeproject
 .pc/

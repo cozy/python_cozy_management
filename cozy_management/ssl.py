@@ -5,6 +5,9 @@
 import os
 import subprocess
 import OpenSSL.crypto
+from glob import glob
+from datetime import datetime, timedelta
+from stat import S_IXUSR
 
 from . import helpers
 
@@ -25,9 +28,7 @@ FILETYPE_PEM = OpenSSL.crypto.FILETYPE_PEM
 TYPE_RSA = OpenSSL.crypto.TYPE_RSA
 
 
-def generate_certificate(common_name,
-                         size=DEFAULT_KEY_SIZE,
-                         digest=DEFAULT_DIGEST):
+def generate_certificate(common_name, size=DEFAULT_KEY_SIZE):
     '''
         Generate private key and certificate for https
     '''
@@ -36,12 +37,14 @@ def generate_certificate(common_name,
     certificate_path = '{}/{}.crt'.format(CERTIFICATES_PATH, common_name)
     if not os.path.isfile(certificate_path):
         print 'Create {}'.format(certificate_path)
-        cmd = 'openssl req -x509 -nodes -newkey rsa:{size} -keyout {private_key_path} -out {certificate_path} -days 3650 -subj "/CN={common_name}"'.format(size=size, private_key_path=private_key_path, certificate_path=certificate_path, common_name=common_name)
+        cmd = 'openssl req -x509 -nodes -newkey rsa:{size} -keyout {private_key_path} -out {certificate_path} -days 3650 -subj "/CN={common_name}"'.format(
+            size=size, private_key_path=private_key_path,
+            certificate_path=certificate_path, common_name=common_name)
         p = subprocess.Popen(cmd,
                              shell=True,
                              stdout=subprocess.PIPE,
                              close_fds=True)
-        stdout, stderr = p.communicate()
+        p.communicate()
         helpers.file_rights(private_key_path, mode=0400, uid=0, gid=0)
         helpers.file_rights(certificate_path, mode=0444, uid=0, gid=0)
     else:
@@ -67,28 +70,54 @@ def acme_init():
                              shell=True,
                              stdout=subprocess.PIPE,
                              close_fds=True)
-        stdout, stderr = p.communicate()
+        p.communicate()
         helpers.file_rights(acme_private_key, mode=0444, uid=0, gid=0)
     else:
         print 'Already exist: {}'.format(acme_private_key)
 
     if not os.path.isfile(acme_intermediate_cert):
         print 'Create {}'.format(acme_intermediate_cert)
-        cmd = 'wget -O - {acme_intermediate_cert_url} >{acme_intermediate_cert}'
+        cmd = 'wget -O - {acme_intermediate_cert_url} > {acme_intermediate_cert}'
         cmd = cmd.format(acme_intermediate_cert_url=acme_intermediate_cert_url,
                          acme_intermediate_cert=acme_intermediate_cert)
         p = subprocess.Popen(cmd,
                              shell=True,
                              stdout=subprocess.PIPE,
                              close_fds=True)
-        stdout, stderr = p.communicate()
+        p.communicate()
         helpers.file_rights(acme_intermediate_cert, mode=0444, uid=0, gid=0)
     else:
         print 'Already exist: {}'.format(acme_intermediate_cert)
 
-def acme_sign_certificate(common_name,
-                          size=DEFAULT_KEY_SIZE,
-                          digest=DEFAULT_DIGEST):
+
+def _internal_sign_certificate(certificate_path, certificate_request_path,
+                              signed_cert):
+    acme_init()
+    cmd = 'acme_tiny.py --account-key {acme_private_key}'
+    cmd += ' --csr {certificate_request_path}'
+    cmd += ' --acme-dir /var/www/cozy-letsencrypt'
+    cmd += ' > {signed_cert}'
+    cmd = cmd.format(acme_private_key=ACME_PRIVATE_KEY,
+                     certificate_request_path=certificate_request_path,
+                     signed_cert=signed_cert)
+    p = subprocess.Popen(cmd,
+                         shell=True,
+                         stdout=subprocess.PIPE,
+                         close_fds=True)
+    p.communicate()
+    cmd = 'cat {signed_cert} {acme_intermediate_cert} > {certificate_path}'
+    cmd = cmd.format(
+        signed_cert=signed_cert,
+        acme_intermediate_cert=ACME_INTERMEDIATE_CERT,
+        certificate_path=certificate_path)
+    p = subprocess.Popen(cmd,
+                         shell=True,
+                         stdout=subprocess.PIPE,
+                         close_fds=True)
+    p.communicate()
+
+
+def acme_sign_certificate(common_name, size=DEFAULT_KEY_SIZE):
     '''
         Sign certificate with acme_tiny for let's encrypt
     '''
@@ -99,11 +128,8 @@ def acme_sign_certificate(common_name,
     signed_cert = '{certificates_path}/{common_name}-signed.crt'.format(
         certificates_path=CERTIFICATES_PATH,
         common_name=common_name)
-    acme_private_key = ACME_PRIVATE_KEY
-    acme_intermediate_cert = ACME_INTERMEDIATE_CERT
 
-    acme_init()
-    generate_certificate(common_name, size, digest)
+    generate_certificate(common_name, size)
 
     cmd = 'openssl req -new -sha256 -key {private_key_path}'
     cmd += ' -subj "/CN={common_name}" -out {certificate_request_path}'
@@ -116,36 +142,58 @@ def acme_sign_certificate(common_name,
                          shell=True,
                          stdout=subprocess.PIPE,
                          close_fds=True)
-    stdout, stderr = p.communicate()
+    p.communicate()
 
-    cmd = 'acme_tiny.py --account-key {acme_private_key}'
-    cmd += ' --csr {certificate_request_path}'
-    cmd += ' --acme-dir /var/www/cozy-letsencrypt'
-    cmd += ' > {signed_cert}'
-    cmd = cmd.format(acme_private_key=acme_private_key,
-                     certificate_request_path=certificate_request_path,
-                     signed_cert=signed_cert)
-    p = subprocess.Popen(cmd,
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         close_fds=True)
-    stdout, stderr = p.communicate()
+    _internal_sign_certificate(certificate_path, certificate_request_path,
+                              signed_cert)
 
-    cmd = 'cat {signed_cert} {acme_intermediate_cert} > {certificate_path}'
-    cmd = cmd.format(
-        signed_cert=signed_cert,
-        acme_intermediate_cert=acme_intermediate_cert,
-        certificate_path=certificate_path)
-    p = subprocess.Popen(cmd,
-                         shell=True,
-                         stdout=subprocess.PIPE,
-                         close_fds=True)
-    stdout, stderr = p.communicate()
+    cron = "/etc/cron.monthly/acme-renew"
+    if not os.path.exists(cron):
+        with open(cron, "w") as file:
+            file.write("#!/bin/bash\ncozy_management renew_certificates\n")
+        st = os.stat(cron)
+        os.chmod(cron, st.st_mode | S_IXUSR)
+
+def _parse_asn1_generalized_date(date):
+    return datetime.strptime(date, "%Y%m%d%H%M%SZ")
+
+def acme_renew_certificates():
+    '''
+        Renew certificates with acme_tiny for let's encrypt
+    '''
+
+    for csr in glob(os.path.join(CERTIFICATES_PATH, '*.csr')):
+        common_name = os.path.basename(csr)
+        common_name = os.path.splitext(common_name)[0]
+
+        certificate_path = "{}.crt".format(common_name)
+        certificate_path = os.path.join(CERTIFICATES_PATH, certificate_path)
+
+        with open(certificate_path) as file:
+            crt = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
+                                                    file.read())
+            expiration = crt.get_notAfter()
+            expiration = _parse_asn1_generalized_date(expiration)
+            remaining = expiration - datetime.utcnow()
+            if remaining > timedelta(days=30):
+                print "No need to renew {} ({})".format(certificate_path, remaining)
+                continue
+            print "Renewing {} ({})".format(certificate_path, remaining)
+
+        certificate_request_path = "{}.csr".format(common_name)
+        certificate_request_path = os.path.join(CERTIFICATES_PATH,
+                                                certificate_request_path)
+
+        signed_cert = "{}-signed.crt".format(common_name)
+        signed_cert = os.path.join(CERTIFICATES_PATH,
+                                    signed_cert)
+
+        _internal_sign_certificate(certificate_path, certificate_request_path,
+                                    signed_cert)
 
 
-def generate_certificate_pure_python(common_name,
-                                     size=DEFAULT_KEY_SIZE,
-                                     digest=DEFAULT_DIGEST):
+def generate_certificate_pure_python(common_name, size=DEFAULT_KEY_SIZE,
+                                        digest=DEFAULT_DIGEST):
     '''
         Generate private key and certificate for https
     '''
@@ -161,7 +209,7 @@ def generate_certificate_pure_python(common_name,
     certificate = OpenSSL.crypto.X509()
     certificate.set_serial_number(0)
     certificate.gmtime_adj_notBefore(0)
-    certificate.gmtime_adj_notAfter(60*60*24*365*5)
+    certificate.gmtime_adj_notAfter(60 * 60 * 24 * 365 * 5)
     certificate.set_issuer(request.get_subject())
     certificate.set_subject(request.get_subject())
     certificate.set_pubkey(request.get_pubkey())
