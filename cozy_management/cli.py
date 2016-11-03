@@ -15,7 +15,7 @@ Usage:
     cozy_management get_crt_common_name [<filename>]
     cozy_management clean_links
     cozy_management make_links <common_name>
-    cozy_management generate_certificate <common_name> [--size <size>] [--digest <digest>]
+    cozy_management generate_certificate <common_name> [--size <size>]
     cozy_management sign_certificate <common_name>
     cozy_management renew_certificates
     cozy_management compare_version <current> <operator> <reference>
@@ -137,15 +137,8 @@ def main():
         else:
             key_size = ssl.DEFAULT_KEY_SIZE
 
-        if arguments['--digest']:
-            digest = arguments['<digest>']
-        else:
-            digest = ssl.DEFAULT_DIGEST
-
-        print 'Generate certificate for {} with {} key size and {} digest'.format(common_name, key_size, digest)
-        ssl.generate_certificate(common_name,
-                                 key_size,
-                                 digest)
+        print 'Generate certificate for {} with {} key size'.format(common_name, key_size)
+        ssl.generate_certificate(common_name, key_size)
 
     if arguments['sign_certificate']:
         common_name = arguments['<common_name>']
