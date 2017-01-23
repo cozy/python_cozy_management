@@ -8,7 +8,7 @@ import shutil
 
 from helpers import cmd_exec
 
-WEBOOB_REPO = 'git://git.symlink.me/pub/weboob/devel.git'
+WEBOOB_REPO = 'https://git.weboob.org/weboob/devel'
 
 
 def get_weboob_version():
