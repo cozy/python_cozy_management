@@ -4,7 +4,7 @@ python-cozy-management (0.0.25) unstable; urgency=medium
   * Upgrade ACME-Tiny (new Let’s Encrypt) ToS
   * Automate Let’s Encrypt renew
 
- -- aeris <aeris@cozycloud.cc>  Wed, 02 Nov 2016 11:08:52 +0100
+ -- Cozy Debian Packaging <debian-packaging@cozycloud.cc>  Wed, 02 Nov 2016 11:08:52 +0100
 
 python-cozy-management (0.0.24) unstable; urgency=medium
 
