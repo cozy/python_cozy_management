@@ -1,4 +1,4 @@
-python-cozy-management (0.0.25) UNRELEASED; urgency=medium
+python-cozy-management (0.0.25) unstable; urgency=medium
 
   * Remove deprecated DH parameters management
   * Upgrade ACME-Tiny (new Let’s Encrypt) ToS
